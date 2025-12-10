@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Personnels Vie Scolaire – Collèges 44 (académie de Nantes)</title>
+  <title>Dashboard Personnels Vie Scolaire – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -89,19 +89,15 @@
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1>Dashboard – Personnels de vie scolaire · Collèges de Loire-Atlantique (44)</h1>
+        <h1>Dashboard – Personnels de vie scolaire · Collèges publics de Loire-Atlantique (44)</h1>
         <div class="muted">Académie de NANTES · Indicateurs personnels 2024 · Effectifs élèves (dernière année dispo trouvée)</div>
       </div>
       <div class="muted">Sources : fr-en-indicateurs_personnels_etablissements2d.csv & Effectifs Collège FR-EN.csv</div>
     </div>
 
-    <div id="cards" class="grid"></div>
-
-    <h2>Top 15 collèges publics par ETP (personnels vie scolaire)</h2>
-    <div id="chart" class="card bar-chart"></div>
-
-    <h2>Top 15 collèges publics par ratio élèves / ETP</h2>
-    <div id="chart-ratio" class="card bar-chart"></div>
+    <div id="cards-row1" class="grid"></div>
+    <div id="cards-row2" class="grid"></div>
+    <div id="cards-row3" class="grid"></div>
 
     <h2>Vue détaillée</h2>
     <div class="card" style="padding:12px; overflow:auto; max-height:650px;">
@@ -113,10 +109,12 @@
           <tr>
             <th data-sort="nom" style="cursor:pointer;">Collège</th>
             <th data-sort="commune" style="cursor:pointer;">Commune</th>
-            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
             <th data-sort="eleves" style="cursor:pointer;">Élèves</th>
             <th>Segpa</th>
             <th>ULIS</th>
+            <th data-sort="ips" style="cursor:pointer;">IPS</th>
+            <th data-sort="ips_ecart" style="cursor:pointer;">Écart-type IPS</th>
+            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
             <th data-sort="ratio" style="cursor:pointer;">Ratio élèves / ETP</th>
           </tr>
         </thead>
@@ -125,6 +123,14 @@
     </div>
     <div class="footnote">
       Note : seuls les établissements publics sont inclus. Les ETP « personnels de vie scolaire » comprennent principalement les AED (surveillants, assistants pédagogiques, assistants de prévention et de sécurité, assistants en préprofessionnalisation, etc.) et peuvent inclure les CPE ou d’autres personnels éducatifs selon la déclaration de l’établissement.
+    </div>
+    <div class="footnote">
+      Sources :
+      <ul>
+        <li>Les personnels dans les établissements du second degré – <a href="https://www.data.gouv.fr/datasets/les-personnels-dans-les-etablissements-du-second-degre/">data.gouv.fr</a></li>
+        <li>Effectifs d’élèves en collège – <a href="https://www.data.gouv.fr/datasets/effectifs-deleves-par-niveau-sexe-langues-vivantes-1-et-2-les-plus-frequentes-par-college-date-dobservation-au-debut-du-mois-doctobre-chaque-annee/">data.gouv.fr</a></li>
+        <li>Indices de position sociale des collèges (à partir de 2023) – <a href="https://www.data.gouv.fr/datasets/ips-colleges-a-partir-de-2023/">data.gouv.fr</a></li>
+      </ul>
     </div>
   </div>
 
@@ -140,7 +146,9 @@
       "effectifs_annee": "2024",
       "commune": "ANCENIS-SAINT-GEREON",
       "segpa": 59,
-      "ulis": 24
+      "ulis": 24,
+      "ips": 103.4,
+      "ips_ecart": 35.3
     },
     {
       "uai": "0440311Z",
@@ -151,7 +159,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-HERBLAIN",
       "segpa": 60,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 82.6,
+      "ips_ecart": 27.3
     },
     {
       "uai": "0442052S",
@@ -162,7 +172,9 @@
       "effectifs_annee": "2024",
       "commune": "VALLET",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 111.2,
+      "ips_ecart": 31.8
     },
     {
       "uai": "0440289A",
@@ -173,7 +185,9 @@
       "effectifs_annee": "2024",
       "commune": "PORNIC",
       "segpa": 0,
-      "ulis": 10
+      "ulis": 10,
+      "ips": 111.3,
+      "ips_ecart": 34.1
     },
     {
       "uai": "0442835T",
@@ -184,7 +198,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 104.5,
+      "ips_ecart": 40.2
     },
     {
       "uai": "0442011X",
@@ -195,7 +211,9 @@
       "effectifs_annee": "2024",
       "commune": "LA CHAPELLE-SUR-ERDRE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 127.3,
+      "ips_ecart": 38.3
     },
     {
       "uai": "0440350S",
@@ -206,7 +224,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-NAZAIRE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 109.8,
+      "ips_ecart": 34.6
     },
     {
       "uai": "0440049P",
@@ -217,7 +237,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 109.4,
+      "ips_ecart": 41.7
     },
     {
       "uai": "0440028S",
@@ -228,7 +250,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 7
+      "ulis": 7,
+      "ips": 102.2,
+      "ips_ecart": 40.9
     },
     {
       "uai": "0440015C",
@@ -239,7 +263,9 @@
       "effectifs_annee": "2024",
       "commune": "HERBIGNAC",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 98.6,
+      "ips_ecart": 30.5
     },
     {
       "uai": "0442921L",
@@ -250,7 +276,9 @@
       "effectifs_annee": "2024",
       "commune": "LOIREAUXENCE",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 101.1,
+      "ips_ecart": 33.0
     },
     {
       "uai": "0442368K",
@@ -261,7 +289,9 @@
       "effectifs_annee": "2024",
       "commune": "GUERANDE",
       "segpa": 0,
-      "ulis": 9
+      "ulis": 9,
+      "ips": 108.8,
+      "ips_ecart": 31.4
     },
     {
       "uai": "0440010X",
@@ -272,7 +302,9 @@
       "effectifs_annee": "2024",
       "commune": "COUERON",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 110.9,
+      "ips_ecart": 36.0
     },
     {
       "uai": "0442029S",
@@ -283,7 +315,9 @@
       "effectifs_annee": "2024",
       "commune": "CARQUEFOU",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 128.7,
+      "ips_ecart": 34.7
     },
     {
       "uai": "0440314C",
@@ -294,7 +328,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-NAZAIRE",
       "segpa": 61,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 98.6,
+      "ips_ecart": 36.3
     },
     {
       "uai": "0441545R",
@@ -305,7 +341,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 59,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 106.9,
+      "ips_ecart": 44.9
     },
     {
       "uai": "0443020U",
@@ -316,7 +354,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 120.4,
+      "ips_ecart": 43.1
     },
     {
       "uai": "0441654J",
@@ -327,7 +367,9 @@
       "effectifs_annee": "2024",
       "commune": "NORT-SUR-ERDRE",
       "segpa": 0,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 111.4,
+      "ips_ecart": 31.5
     },
     {
       "uai": "0442759K",
@@ -338,7 +380,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-NAZAIRE",
       "segpa": 0,
-      "ulis": 8
+      "ulis": 8,
+      "ips": 108.4,
+      "ips_ecart": 38.4
     },
     {
       "uai": "0442625P",
@@ -349,7 +393,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINTE-PAZANNE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 111.6,
+      "ips_ecart": 29.8
     },
     {
       "uai": "0442728B",
@@ -360,7 +406,9 @@
       "effectifs_annee": "2024",
       "commune": "HERIC",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 113.3,
+      "ips_ecart": 30.8
     },
     {
       "uai": "0440016D",
@@ -371,7 +419,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-HERBLAIN",
       "segpa": 0,
-      "ulis": 6
+      "ulis": 6,
+      "ips": 112.7,
+      "ips_ecart": 36.1
     },
     {
       "uai": "0441547T",
@@ -382,7 +432,9 @@
       "effectifs_annee": "2024",
       "commune": "LA CHAPELLE-SUR-ERDRE",
       "segpa": 0,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 131.8,
+      "ips_ecart": 36.2
     },
     {
       "uai": "0440292D",
@@ -393,7 +445,9 @@
       "effectifs_annee": "2024",
       "commune": "NOZAY",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 107.0,
+      "ips_ecart": 32.1
     },
     {
       "uai": "0442806L",
@@ -404,7 +458,9 @@
       "effectifs_annee": "2024",
       "commune": "SAVENAY",
       "segpa": 0,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 115.9,
+      "ips_ecart": 32.2
     },
     {
       "uai": "0440080Y",
@@ -415,7 +471,9 @@
       "effectifs_annee": "2024",
       "commune": "VERTOU",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 129.3,
+      "ips_ecart": 34.5
     },
     {
       "uai": "0440025N",
@@ -426,7 +484,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 113.4,
+      "ips_ecart": 43.8
     },
     {
       "uai": "0440285W",
@@ -437,7 +497,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 131.6,
+      "ips_ecart": 38.2
     },
     {
       "uai": "0441822S",
@@ -448,7 +510,9 @@
       "effectifs_annee": "2024",
       "commune": "LA BAULE-ESCOUBLAC",
       "segpa": 0,
-      "ulis": 10
+      "ulis": 10,
+      "ips": 132.3,
+      "ips_ecart": 33.6
     },
     {
       "uai": "0440286X",
@@ -459,7 +523,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 74.3,
+      "ips_ecart": 27.6
     },
     {
       "uai": "0441862K",
@@ -470,7 +536,9 @@
       "effectifs_annee": "2024",
       "commune": "PAIMBOEUF",
       "segpa": 52,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 94.4,
+      "ips_ecart": 28.8
     },
     {
       "uai": "0440539X",
@@ -481,7 +549,9 @@
       "effectifs_annee": "2024",
       "commune": "MONTOIR-DE-BRETAGNE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 92.8,
+      "ips_ecart": 24.6
     },
     {
       "uai": "0442807M",
@@ -492,7 +562,9 @@
       "effectifs_annee": "2024",
       "commune": "PONTCHATEAU",
       "segpa": 63,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 100.4,
+      "ips_ecart": 29.6
     },
     {
       "uai": "0440284V",
@@ -503,7 +575,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 77.3,
+      "ips_ecart": 32.7
     },
     {
       "uai": "0440348P",
@@ -514,7 +588,9 @@
       "effectifs_annee": "2024",
       "commune": "CHATEAUBRIANT",
       "segpa": 62,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 91.8,
+      "ips_ecart": 29.4
     },
     {
       "uai": "0441616T",
@@ -525,7 +601,9 @@
       "effectifs_annee": "2024",
       "commune": "TRIGNAC",
       "segpa": 62,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 85.5,
+      "ips_ecart": 25.5
     },
     {
       "uai": "0440055W",
@@ -536,7 +614,9 @@
       "effectifs_annee": "2024",
       "commune": "ORVAULT",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 123.1,
+      "ips_ecart": 40.5
     },
     {
       "uai": "0442023K",
@@ -547,7 +627,9 @@
       "effectifs_annee": "2024",
       "commune": "CORDEMAIS",
       "segpa": 0,
-      "ulis": 13
+      "ulis": 13,
+      "ips": 115.7,
+      "ips_ecart": 34.8
     },
     {
       "uai": "0441610L",
@@ -558,7 +640,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-HERBLAIN",
       "segpa": 62,
-      "ulis": 10
+      "ulis": 10,
+      "ips": 98.0,
+      "ips_ecart": 38.8
     },
     {
       "uai": "0442417N",
@@ -569,7 +653,9 @@
       "effectifs_annee": "2024",
       "commune": "THOUARE-SUR-LOIRE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 120.1,
+      "ips_ecart": 37.5
     },
     {
       "uai": "0440293E",
@@ -580,7 +666,9 @@
       "effectifs_annee": "2024",
       "commune": "CHATEAUBRIANT",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 93.1,
+      "ips_ecart": 28.5
     },
     {
       "uai": "0442781J",
@@ -591,7 +679,9 @@
       "effectifs_annee": "2024",
       "commune": "CLISSON",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 115.3,
+      "ips_ecart": 32.0
     },
     {
       "uai": "0441658N",
@@ -602,7 +692,9 @@
       "effectifs_annee": "2024",
       "commune": "LE PELLERIN",
       "segpa": 0,
-      "ulis": 5
+      "ulis": 5,
+      "ips": 111.0,
+      "ips_ecart": 31.1
     },
     {
       "uai": "0440018F",
@@ -613,7 +705,9 @@
       "effectifs_annee": "2024",
       "commune": "MACHECOUL-SAINT-MEME",
       "segpa": 60,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 92.1,
+      "ips_ecart": 26.8
     },
     {
       "uai": "0440347N",
@@ -624,7 +718,9 @@
       "effectifs_annee": "2024",
       "commune": "LA MONTAGNE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 118.5,
+      "ips_ecart": 33.3
     },
     {
       "uai": "0440013A",
@@ -635,7 +731,9 @@
       "effectifs_annee": "2024",
       "commune": "GUEMENE-PENFAO",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 96.2,
+      "ips_ecart": 30.7
     },
     {
       "uai": "0440291C",
@@ -646,7 +744,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-SEBASTIEN-SUR-LOIRE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 103.2,
+      "ips_ecart": 35.0
     },
     {
       "uai": "0441917V",
@@ -657,7 +757,9 @@
       "effectifs_annee": "2024",
       "commune": "MISSILLAC",
       "segpa": 0,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 95.9,
+      "ips_ecart": 27.8
     },
     {
       "uai": "0441655K",
@@ -668,7 +770,9 @@
       "effectifs_annee": "2024",
       "commune": "VALLONS-DE-L'ERDRE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 93.8,
+      "ips_ecart": 29.3
     },
     {
       "uai": "0441612N",
@@ -679,7 +783,9 @@
       "effectifs_annee": "2024",
       "commune": "LEGE",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 98.6,
+      "ips_ecart": 29.2
     },
     {
       "uai": "0441548U",
@@ -690,7 +796,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-SEBASTIEN-SUR-LOIRE",
       "segpa": 58,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 114.8,
+      "ips_ecart": 40.3
     },
     {
       "uai": "0441724K",
@@ -701,7 +809,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINTE-LUCE-SUR-LOIRE",
       "segpa": 63,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 104.4,
+      "ips_ecart": 40.9
     },
     {
       "uai": "0440065G",
@@ -712,7 +822,9 @@
       "effectifs_annee": "2024",
       "commune": "REZE",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 113.9,
+      "ips_ecart": 35.7
     },
     {
       "uai": "0441657M",
@@ -723,7 +835,9 @@
       "effectifs_annee": "2024",
       "commune": "SAVENAY",
       "segpa": 62,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 113.5,
+      "ips_ecart": 34.0
     },
     {
       "uai": "0441686U",
@@ -734,7 +848,9 @@
       "effectifs_annee": "2024",
       "commune": "LE LOROUX-BOTTEREAU",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 116.5,
+      "ips_ecart": 32.5
     },
     {
       "uai": "0442542Z",
@@ -745,7 +861,9 @@
       "effectifs_annee": "2024",
       "commune": "AIGREFEUILLE-SUR-MAINE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 110.2,
+      "ips_ecart": 31.7
     },
     {
       "uai": "0440066H",
@@ -756,7 +874,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-BREVIN-LES-PINS",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 110.8,
+      "ips_ecart": 31.9
     },
     {
       "uai": "0442277L",
@@ -767,7 +887,9 @@
       "effectifs_annee": "2024",
       "commune": "BASSE-GOULAINE",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 128.9,
+      "ips_ecart": 33.1
     },
     {
       "uai": "0441859G",
@@ -778,7 +900,9 @@
       "effectifs_annee": "2024",
       "commune": "LA BAULE-ESCOUBLAC",
       "segpa": 60,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 114.7,
+      "ips_ecart": 35.1
     },
     {
       "uai": "0442595G",
@@ -789,7 +913,9 @@
       "effectifs_annee": "2024",
       "commune": "VERTOU",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 123.6,
+      "ips_ecart": 32.5
     },
     {
       "uai": "0441728P",
@@ -800,7 +926,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-JOACHIM",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 99.4,
+      "ips_ecart": 29.5
     },
     {
       "uai": "0440061C",
@@ -811,7 +939,9 @@
       "effectifs_annee": "2024",
       "commune": "LE POULIGUEN",
       "segpa": 0,
-      "ulis": 7
+      "ulis": 7,
+      "ips": 104.9,
+      "ips_ecart": 29.8
     },
     {
       "uai": "0440023L",
@@ -822,7 +952,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 51,
-      "ulis": 24
+      "ulis": 24,
+      "ips": 120.9,
+      "ips_ecart": 44.2
     },
     {
       "uai": "0440316E",
@@ -833,7 +965,9 @@
       "effectifs_annee": "2024",
       "commune": "BOUGUENAIS",
       "segpa": 62,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 107.0,
+      "ips_ecart": 35.4
     },
     {
       "uai": "0440045K",
@@ -844,7 +978,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 13
+      "ulis": 13,
+      "ips": 129.5,
+      "ips_ecart": 40.6
     },
     {
       "uai": "0441613P",
@@ -855,7 +991,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-NAZAIRE",
       "segpa": 63,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 69.8,
+      "ips_ecart": 22.8
     },
     {
       "uai": "0440308W",
@@ -866,7 +1004,9 @@
       "effectifs_annee": "2024",
       "commune": "BLAIN",
       "segpa": 92,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 100.7,
+      "ips_ecart": 29.9
     },
     {
       "uai": "0442691L",
@@ -877,7 +1017,9 @@
       "effectifs_annee": "2024",
       "commune": "LIGNE",
       "segpa": 0,
-      "ulis": 9
+      "ulis": 9,
+      "ips": 113.2,
+      "ips_ecart": 32.2
     },
     {
       "uai": "0441858F",
@@ -888,7 +1030,9 @@
       "effectifs_annee": "2024",
       "commune": "BOUAYE",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 116.4,
+      "ips_ecart": 34.2
     },
     {
       "uai": "0442418P",
@@ -899,7 +1043,9 @@
       "effectifs_annee": "2024",
       "commune": "TREILLIERES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 125.4,
+      "ips_ecart": 33.2
     },
     {
       "uai": "0440008V",
@@ -910,7 +1056,9 @@
       "effectifs_annee": "2024",
       "commune": "CLISSON",
       "segpa": 51,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 113.2,
+      "ips_ecart": 34.2
     },
     {
       "uai": "0440534S",
@@ -921,7 +1069,9 @@
       "effectifs_annee": "2024",
       "commune": "REZE",
       "segpa": 58,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 99.3,
+      "ips_ecart": 39.9
     },
     {
       "uai": "0440538W",
@@ -932,7 +1082,9 @@
       "effectifs_annee": "2024",
       "commune": "GUERANDE",
       "segpa": 0,
-      "ulis": 6
+      "ulis": 6,
+      "ips": 109.0,
+      "ips_ecart": 31.0
     },
     {
       "uai": "0440536U",
@@ -943,7 +1095,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 93.6,
+      "ips_ecart": 39.0
     },
     {
       "uai": "0441608J",
@@ -954,7 +1108,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 47,
-      "ulis": 20
+      "ulis": 20,
+      "ips": 77.3,
+      "ips_ecart": 30.8
     },
     {
       "uai": "0440283U",
@@ -965,7 +1121,9 @@
       "effectifs_annee": "2024",
       "commune": "NANTES",
       "segpa": 53,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 94.9,
+      "ips_ecart": 38.3
     },
     {
       "uai": "0440064F",
@@ -976,7 +1134,9 @@
       "effectifs_annee": "2024",
       "commune": "REZE",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 115.4,
+      "ips_ecart": 40.2
     },
     {
       "uai": "0442782K",
@@ -987,7 +1147,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-PHILBERT-DE-GRAND-LIEU",
       "segpa": 0,
-      "ulis": 11
+      "ulis": 11,
+      "ips": 109.0,
+      "ips_ecart": 32.3
     },
     {
       "uai": "0440287Y",
@@ -998,7 +1160,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-HERBLAIN",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 111.2,
+      "ips_ecart": 38.1
     },
     {
       "uai": "0442186M",
@@ -1009,7 +1173,9 @@
       "effectifs_annee": "2024",
       "commune": "SAINT-PHILBERT-DE-GRAND-LIEU",
       "segpa": 0,
-      "ulis": 12
+      "ulis": 12,
+      "ips": 109.9,
+      "ips_ecart": 32.4
     },
     {
       "uai": "0441727N",
@@ -1020,7 +1186,9 @@
       "effectifs_annee": "2024",
       "commune": "DONGES",
       "segpa": 0,
-      "ulis": 10
+      "ulis": 10,
+      "ips": 89.8,
+      "ips_ecart": 24.2
     },
     {
       "uai": "0443021V",
@@ -1031,7 +1199,9 @@
       "effectifs_annee": "2024",
       "commune": "CHAUMES-EN-RETZ",
       "segpa": 0,
-      "ulis": 0
+      "ulis": 0,
+      "ips": 101.7,
+      "ips_ecart": 29.2
     }
   ],
   "summary": {
@@ -1040,7 +1210,12 @@
     "aed_moyen": 6.26,
     "aed_min": 3.5,
     "aed_max": 10.3,
-    "eleves_total": 44451
+    "eleves_total": 44451,
+    "segpa_total": 1320,
+    "ulis_total": 722,
+    "ips_moyen": 107.4,
+    "ips_min": 69.8,
+    "ips_max": 132.3
   }
 }
   </script>
@@ -1057,57 +1232,36 @@
       ? summary.eleves_total / summary.aed_total
       : null;
 
-    const cards = [
+    const cardsRow1 = [
       { label: 'Collèges', value: summary.nb_colleges },
+      { label: 'IPS moyen', value: formatFloat(summary.ips_moyen) },
+      { label: 'IPS min / max', value: `${formatFloat(summary.ips_min)} / ${formatFloat(summary.ips_max)}` },
+    ];
+    const cardsRow2 = [
+      { label: 'Élèves (total)', value: formatNumber(summary.eleves_total) },
+      { label: 'Segpa total', value: formatNumber(summary.segpa_total) },
+      { label: 'ULIS total', value: formatNumber(summary.ulis_total) },
+    ];
+    const cardsRow3 = [
       { label: 'Total ETP', value: formatFloat(summary.aed_total) },
       { label: 'ETP moyen', value: formatFloat(summary.aed_moyen) },
       { label: 'Min / Max ETP', value: `${formatFloat(summary.aed_min)} / ${formatFloat(summary.aed_max)}` },
-      { label: 'Élèves (total)', value: formatNumber(summary.eleves_total) },
-      { label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' }
+      { label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' },
     ];
 
-    const cardsRoot = document.getElementById('cards');
-    cardsRoot.innerHTML = cards.map(c => `
-      <div class="card">
-        <div class="muted">${c.label}</div>
-        <div class="value">${c.value}</div>
-      </div>
-    `).join('');
-
-    const topChartData = records
-      .filter(r => typeof r.aed_etp === 'number')
-      .sort((a, b) => b.aed_etp - a.aed_etp)
-      .slice(0, 15);
-
-    const maxAed = Math.max(...topChartData.map(r => r.aed_etp));
-    const chartRoot = document.getElementById('chart');
-    chartRoot.innerHTML = topChartData.map(r => `
-      <div class="bar">
-        <div class="bar-label">${r.nom}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${(r.aed_etp / maxAed) * 100}%"></div>
+    const renderCards = (rootId, items) => {
+      const root = document.getElementById(rootId);
+      root.innerHTML = items.map(c => `
+        <div class="card">
+          <div class="muted">${c.label}</div>
+          <div class="value">${c.value}</div>
         </div>
-        <div class="muted" style="width:80px; text-align:right;">${formatFloat(r.aed_etp)} ETP</div>
-      </div>
-    `).join('');
+      `).join('');
+    };
 
-    const ratioData = records
-      .filter(r => typeof r.aed_etp === 'number' && typeof r.eleves === 'number' && r.aed_etp > 0)
-      .map(r => ({ nom: r.nom, aed_etp: r.aed_etp, eleves: r.eleves, ratio: r.eleves / r.aed_etp }))
-      .sort((a, b) => b.ratio - a.ratio)
-      .slice(0, 15);
-
-    const maxRatio = Math.max(...ratioData.map(r => r.ratio));
-    const chartRatioRoot = document.getElementById('chart-ratio');
-    chartRatioRoot.innerHTML = ratioData.map(r => `
-      <div class="bar">
-        <div class="bar-label">${r.nom}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${(r.ratio / maxRatio) * 100}%"></div>
-        </div>
-        <div class="muted" style="width:90px; text-align:right;">${formatFloat(r.ratio)} élèves/ETP</div>
-      </div>
-    `).join('');
+    renderCards('cards-row1', cardsRow1);
+    renderCards('cards-row2', cardsRow2);
+    renderCards('cards-row3', cardsRow3);
 
     const tbody = document.getElementById('table-body');
     const filterInput = document.getElementById('filter-text');
@@ -1151,10 +1305,12 @@
         <tr>
           <td>${r.nom}</td>
           <td>${r.commune || 'n.d.'}</td>
-          <td>${formatFloat(r.aed_etp)} (2024)</td>
           <td>${formatNumber(r.eleves)} (${r.effectifs_annee || 'n.d.'})</td>
           <td>${formatNumber(r.segpa)}</td>
           <td>${formatNumber(r.ulis)}</td>
+          <td>${formatFloat(r.ips)}</td>
+          <td>${formatFloat(r.ips_ecart)}</td>
+          <td>${formatFloat(r.aed_etp)} (2024)</td>
           <td>${formatFloat(r.ratio)}</td>
         </tr>
       `).join('');

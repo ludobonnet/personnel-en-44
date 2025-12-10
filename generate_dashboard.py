@@ -132,14 +132,68 @@ def load_effectifs_latest(
     return latest
 
 
+def load_ips(
+    path: Optional[pathlib.Path],
+    departement: str,
+    academie: str,
+) -> Dict[str, dict]:
+    """
+    Charge l'IPS et l'écart-type par UAI depuis le fichier d'indices sociaux.
+    Filtre : département, académie, secteur public.
+    """
+    ips_map: Dict[str, dict] = {}
+    if not path:
+        return ips_map
+    with path.open(newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        if not reader.fieldnames:
+            return ips_map
+        def pick(keys, fallback=None):
+            for k in keys:
+                if k in reader.fieldnames:
+                    return k
+            return fallback
+        dep_key = pick(["Code du département", "Code_departement"])
+        acad_key = pick(["Académie", "Academie", "Code académie"])
+        secteur_key = pick(["Secteur", "secteur"])
+        uai_key = pick(["UAI"])
+        ips_key = pick(["IPS"])
+        ecart_key = pick(["Ecart type de l'IPS", "Ecart type IPS"])
+        year_key = pick(["Rentrée scolaire"])
+        for r in reader:
+            if (r.get(dep_key) or "") != departement.zfill(2) and (r.get(dep_key) or "") != departement.zfill(3):
+                continue
+            if (r.get(acad_key) or "").upper() != academie.upper():
+                continue
+            if (r.get(secteur_key) or "").strip().lower().startswith("priv"):
+                continue
+            uai = r.get(uai_key)
+            if not uai:
+                continue
+            ips_val = None
+            ips_ecart = None
+            try:
+                ips_val = float(r.get(ips_key)) if r.get(ips_key) else None
+            except (TypeError, ValueError):
+                pass
+            try:
+                ips_ecart = float(r.get(ecart_key)) if r.get(ecart_key) else None
+            except (TypeError, ValueError):
+                pass
+            ips_map[uai] = {"ips": ips_val, "ecart": ips_ecart, "year": r.get(year_key)}
+    return ips_map
+
+
 def merge_data(
     ind_rows: List[dict],
     eff_map: Dict[str, dict],
+    ips_map: Dict[str, dict],
 ) -> Tuple[List[dict], dict]:
     records: List[dict] = []
     for r in ind_rows:
         uai = r.get("Identifiant de l'établissement")
         eff = eff_map.get(uai)
+        ips = ips_map.get(uai)
         try:
             aed = float(r["ETP de personnels de vie scolaire"]) if r["ETP de personnels de vie scolaire"] else None
         except (ValueError, KeyError):
@@ -149,6 +203,8 @@ def merge_data(
         commune = eff.get("commune") if eff else None
         segpa = eff.get("segpa") if eff else None
         ulis = eff.get("ulis") if eff else None
+        ips_value = ips.get("ips") if ips else None
+        ips_ecart = ips.get("ecart") if ips else None
         records.append(
             {
                 "uai": uai,
@@ -160,11 +216,16 @@ def merge_data(
                 "commune": commune,
                 "segpa": segpa,
                 "ulis": ulis,
+                "ips": ips_value,
+                "ips_ecart": ips_ecart,
             }
         )
 
     valid_aed = [x["aed_etp"] for x in records if isinstance(x["aed_etp"], (int, float))]
     valid_eleves = [x["eleves"] for x in records if isinstance(x["eleves"], int)]
+    valid_segpa = [x["segpa"] for x in records if isinstance(x["segpa"], int)]
+    valid_ulis = [x["ulis"] for x in records if isinstance(x["ulis"], int)]
+    valid_ips = [x["ips"] for x in records if isinstance(x["ips"], (int, float))]
 
     summary = {
         "nb_colleges": len(records),
@@ -173,6 +234,11 @@ def merge_data(
         "aed_min": round(min(valid_aed), 2) if valid_aed else None,
         "aed_max": round(max(valid_aed), 2) if valid_aed else None,
         "eleves_total": sum(valid_eleves) if valid_eleves else None,
+        "segpa_total": sum(valid_segpa) if valid_segpa else None,
+        "ulis_total": sum(valid_ulis) if valid_ulis else None,
+        "ips_moyen": round(sum(valid_ips) / len(valid_ips), 1) if valid_ips else None,
+        "ips_min": round(min(valid_ips), 1) if valid_ips else None,
+        "ips_max": round(max(valid_ips), 1) if valid_ips else None,
     }
     return records, summary
 
@@ -183,7 +249,7 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Personnels Vie Scolaire – Collèges 44 (académie de Nantes)</title>
+  <title>Dashboard Personnels Vie Scolaire – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
   <style>
     :root {{
       color-scheme: light dark;
@@ -270,19 +336,15 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1>Dashboard – Personnels de vie scolaire · Collèges de {meta['departement_label']} ({meta['departement']})</h1>
+        <h1>Dashboard – Personnels de vie scolaire · Collèges publics de {meta['departement_label']} ({meta['departement']})</h1>
         <div class="muted">Académie de {meta['academie']} · Indicateurs personnels 2024 · Effectifs élèves (dernière année dispo trouvée)</div>
       </div>
       <div class="muted">Sources : {meta['ind_path']} & {meta['eff_path']}</div>
     </div>
 
-    <div id="cards" class="grid"></div>
-
-    <h2>Top {top_n} collèges publics par ETP (personnels vie scolaire)</h2>
-    <div id="chart" class="card bar-chart"></div>
-
-    <h2>Top {top_n} collèges publics par ratio élèves / ETP</h2>
-    <div id="chart-ratio" class="card bar-chart"></div>
+    <div id="cards-row1" class="grid"></div>
+    <div id="cards-row2" class="grid"></div>
+    <div id="cards-row3" class="grid"></div>
 
     <h2>Vue détaillée</h2>
     <div class="card" style="padding:12px; overflow:auto; max-height:650px;">
@@ -294,10 +356,12 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
           <tr>
             <th data-sort="nom" style="cursor:pointer;">Collège</th>
             <th data-sort="commune" style="cursor:pointer;">Commune</th>
-            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
             <th data-sort="eleves" style="cursor:pointer;">Élèves</th>
             <th>Segpa</th>
             <th>ULIS</th>
+            <th data-sort="ips" style="cursor:pointer;">IPS</th>
+            <th data-sort="ips_ecart" style="cursor:pointer;">Écart-type IPS</th>
+            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
             <th data-sort="ratio" style="cursor:pointer;">Ratio élèves / ETP</th>
           </tr>
         </thead>
@@ -306,6 +370,14 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
     </div>
     <div class="footnote">
       Note : seuls les établissements publics sont inclus. Les ETP « personnels de vie scolaire » comprennent principalement les AED (surveillants, assistants pédagogiques, assistants de prévention et de sécurité, assistants en préprofessionnalisation, etc.) et peuvent inclure les CPE ou d’autres personnels éducatifs selon la déclaration de l’établissement.
+    </div>
+    <div class="footnote">
+      Sources :
+      <ul>
+        <li>Les personnels dans les établissements du second degré – <a href="https://www.data.gouv.fr/datasets/les-personnels-dans-les-etablissements-du-second-degre/">data.gouv.fr</a></li>
+        <li>Effectifs d’élèves en collège – <a href="https://www.data.gouv.fr/datasets/effectifs-deleves-par-niveau-sexe-langues-vivantes-1-et-2-les-plus-frequentes-par-college-date-dobservation-au-debut-du-mois-doctobre-chaque-annee/">data.gouv.fr</a></li>
+        <li>Indices de position sociale des collèges (à partir de 2023) – <a href="https://www.data.gouv.fr/datasets/ips-colleges-a-partir-de-2023/">data.gouv.fr</a></li>
+      </ul>
     </div>
   </div>
 
@@ -325,57 +397,36 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
       ? summary.eleves_total / summary.aed_total
       : null;
 
-    const cards = [
+    const cardsRow1 = [
       {{ label: 'Collèges', value: summary.nb_colleges }},
+      {{ label: 'IPS moyen', value: formatFloat(summary.ips_moyen) }},
+      {{ label: 'IPS min / max', value: `${{formatFloat(summary.ips_min)}} / ${{formatFloat(summary.ips_max)}}` }},
+    ];
+    const cardsRow2 = [
+      {{ label: 'Élèves (total)', value: formatNumber(summary.eleves_total) }},
+      {{ label: 'Segpa total', value: formatNumber(summary.segpa_total) }},
+      {{ label: 'ULIS total', value: formatNumber(summary.ulis_total) }},
+    ];
+    const cardsRow3 = [
       {{ label: 'Total ETP', value: formatFloat(summary.aed_total) }},
       {{ label: 'ETP moyen', value: formatFloat(summary.aed_moyen) }},
       {{ label: 'Min / Max ETP', value: `${{formatFloat(summary.aed_min)}} / ${{formatFloat(summary.aed_max)}}` }},
-      {{ label: 'Élèves (total)', value: formatNumber(summary.eleves_total) }},
-      {{ label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' }}
+      {{ label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' }},
     ];
 
-    const cardsRoot = document.getElementById('cards');
-    cardsRoot.innerHTML = cards.map(c => `
-      <div class="card">
-        <div class="muted">${{c.label}}</div>
-        <div class="value">${{c.value}}</div>
-      </div>
-    `).join('');
-
-    const topChartData = records
-      .filter(r => typeof r.aed_etp === 'number')
-      .sort((a, b) => b.aed_etp - a.aed_etp)
-      .slice(0, {top_n});
-
-    const maxAed = Math.max(...topChartData.map(r => r.aed_etp));
-    const chartRoot = document.getElementById('chart');
-    chartRoot.innerHTML = topChartData.map(r => `
-      <div class="bar">
-        <div class="bar-label">${{r.nom}}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${{(r.aed_etp / maxAed) * 100}}%"></div>
+    const renderCards = (rootId, items) => {{
+      const root = document.getElementById(rootId);
+      root.innerHTML = items.map(c => `
+        <div class="card">
+          <div class="muted">${{c.label}}</div>
+          <div class="value">${{c.value}}</div>
         </div>
-        <div class="muted" style="width:80px; text-align:right;">${{formatFloat(r.aed_etp)}} ETP</div>
-      </div>
-    `).join('');
+      `).join('');
+    }};
 
-    const ratioData = records
-      .filter(r => typeof r.aed_etp === 'number' && typeof r.eleves === 'number' && r.aed_etp > 0)
-      .map(r => ({{ nom: r.nom, aed_etp: r.aed_etp, eleves: r.eleves, ratio: r.eleves / r.aed_etp }}))
-      .sort((a, b) => b.ratio - a.ratio)
-      .slice(0, {top_n});
-
-    const maxRatio = Math.max(...ratioData.map(r => r.ratio));
-    const chartRatioRoot = document.getElementById('chart-ratio');
-    chartRatioRoot.innerHTML = ratioData.map(r => `
-      <div class="bar">
-        <div class="bar-label">${{r.nom}}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${{(r.ratio / maxRatio) * 100}}%"></div>
-        </div>
-        <div class="muted" style="width:90px; text-align:right;">${{formatFloat(r.ratio)}} élèves/ETP</div>
-      </div>
-    `).join('');
+    renderCards('cards-row1', cardsRow1);
+    renderCards('cards-row2', cardsRow2);
+    renderCards('cards-row3', cardsRow3);
 
     const tbody = document.getElementById('table-body');
     const filterInput = document.getElementById('filter-text');
@@ -419,10 +470,12 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
         <tr>
           <td>${{r.nom}}</td>
           <td>${{r.commune || 'n.d.'}}</td>
-          <td>${{formatFloat(r.aed_etp)}} (2024)</td>
           <td>${{formatNumber(r.eleves)}} (${{r.effectifs_annee || 'n.d.'}})</td>
           <td>${{formatNumber(r.segpa)}}</td>
           <td>${{formatNumber(r.ulis)}}</td>
+          <td>${{formatFloat(r.ips)}}</td>
+          <td>${{formatFloat(r.ips_ecart)}}</td>
+          <td>${{formatFloat(r.aed_etp)}} (2024)</td>
           <td>${{formatFloat(r.ratio)}}</td>
         </tr>
       `).join('');
@@ -453,6 +506,7 @@ def main():
     parser = argparse.ArgumentParser(description="Générer le dashboard AED (collèges 44, académie Nantes).")
     parser.add_argument("--indicateurs", required=True, help="Chemin du CSV indicateurs personnels")
     parser.add_argument("--effectifs", required=True, help="Chemin du CSV effectifs second degré")
+    parser.add_argument("--ips", help="Chemin du CSV indices de position sociale (optionnel)")
     parser.add_argument("--output", default="dashboard.html", help="Chemin de sortie HTML")
     parser.add_argument("--departement", default="44", help="Code département (ex: 44)")
     parser.add_argument("--academie", default="NANTES", help="Libellé académie (ex: NANTES)")
@@ -462,12 +516,14 @@ def main():
 
     ind_path = pathlib.Path(args.indicateurs)
     eff_path = pathlib.Path(args.effectifs)
+    ips_path = pathlib.Path(args.ips) if args.ips else None
 
     ind_rows = load_indicateurs(ind_path, args.departement, args.academie, args.nature_prefix)
     eff_map = load_effectifs_latest(eff_path, args.departement, args.academie)
+    ips_map = load_ips(ips_path, args.departement, args.academie)
 
     # Détection de la clé année (avec BOM possible)
-    records, summary = merge_data(ind_rows, eff_map)
+    records, summary = merge_data(ind_rows, eff_map, ips_map)
 
     html = render_html(
         records,
@@ -478,6 +534,7 @@ def main():
             "academie": args.academie,
             "ind_path": ind_path.name,
             "eff_path": eff_path.name,
+            "ips_path": ips_path.name if ips_path else "non fourni",
         },
         top_n=args.top,
     )
