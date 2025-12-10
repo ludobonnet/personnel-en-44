@@ -64,35 +64,77 @@ def load_effectifs_latest(
 ) -> Dict[str, dict]:
     """
     Retourne, par UAI, la ligne d'effectifs la plus récente.
+    Compatible avec deux schémas :
+    - fr-en-effectifs-second-degre.csv
+    - Effectifs Collège FR-EN.csv
     """
     latest: Dict[str, dict] = {}
+
+    def pick(keys, fallback=None):
+        for k in keys:
+            if k in reader.fieldnames:
+                return k
+        return fallback
+
     with path.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter=";")
-        # Gestion éventuelle du BOM sur la première clé
-        year_key = reader.fieldnames[0] if reader.fieldnames else "\ufeffAnnee_scolaire"
+        if not reader.fieldnames:
+            return latest
+
+        year_key = pick(["Rentrée scolaire", "Annee_scolaire", "\ufeffAnnee_scolaire"], reader.fieldnames[0])
+        dep_key = pick(["Code_departement", "Code département"])
+        acad_key = pick(["Academie", "Académie"])
+        type_key = pick(["Type_d_etablissement", "Dénomination principale"])
+        secteur_key = pick(["Secteur_d_enseignement", "Secteur"])
+        uai_key = pick(["Numero_d_etablissement", "UAI"])
+        eleves_key = pick(["Nombre_d_eleves", "nombre_eleves_total"])
+        commune_key = pick(["localite_acheminement", "Commune"])
+        segpa_key = pick(["Nombre d'élèves total Segpa", "Nombre_eleves_total_Segpa"])
+        ulis_key = pick(["Nombre d'élèves total ULIS", "Nombre_eleves_total_ULIS"])
+
         for r in reader:
-            if r.get("Code_departement") != f"{departement:0>3}":
+            dep_val = (r.get(dep_key) or "").zfill(3)
+            if dep_val != f"{departement:0>3}":
                 continue
-            if (r.get("Academie") or "").upper() != academie.upper():
+            if (r.get(acad_key) or "").upper() != academie.upper():
                 continue
-            if (r.get("Type_d_etablissement") or "").strip().upper() != "COLLEGE":
+            type_val = (r.get(type_key) or "").strip().upper()
+            if type_val != "COLLEGE":
                 continue
-            if (r.get("Secteur_d_enseignement") or "").strip().lower() != "public":
+            if (r.get(secteur_key) or "").strip().lower() != "public":
                 continue
-            uai = r.get("Numero_d_etablissement")
+            uai = r.get(uai_key)
             if not uai:
                 continue
             year = r.get(year_key, "")
             prev = latest.get(uai)
-            if prev is None or year > prev.get(year_key, ""):
-                latest[uai] = r
+            if prev and year <= prev["year"]:
+                continue
+            try:
+                eleves = int(r.get(eleves_key) or 0)
+            except (TypeError, ValueError):
+                eleves = None
+            try:
+                segpa = int(r.get(segpa_key) or 0) if segpa_key else None
+            except (TypeError, ValueError):
+                segpa = None
+            try:
+                ulis = int(r.get(ulis_key) or 0) if ulis_key else None
+            except (TypeError, ValueError):
+                ulis = None
+            latest[uai] = {
+                "year": year,
+                "eleves": eleves,
+                "commune": r.get(commune_key),
+                "segpa": segpa,
+                "ulis": ulis,
+            }
     return latest
 
 
 def merge_data(
     ind_rows: List[dict],
     eff_map: Dict[str, dict],
-    year_key: str,
 ) -> Tuple[List[dict], dict]:
     records: List[dict] = []
     for r in ind_rows:
@@ -102,17 +144,11 @@ def merge_data(
             aed = float(r["ETP de personnels de vie scolaire"]) if r["ETP de personnels de vie scolaire"] else None
         except (ValueError, KeyError):
             aed = None
-        eleves = None
-        effectifs_annee = None
-        if eff:
-            try:
-                eleves = int(eff.get("Nombre_d_eleves") or 0)
-            except ValueError:
-                eleves = None
-            effectifs_annee = eff.get(year_key)
-        commune = None
-        if eff:
-            commune = eff.get("localite_acheminement")
+        eleves = eff.get("eleves") if eff else None
+        effectifs_annee = eff.get("year") if eff else None
+        commune = eff.get("commune") if eff else None
+        segpa = eff.get("segpa") if eff else None
+        ulis = eff.get("ulis") if eff else None
         records.append(
             {
                 "uai": uai,
@@ -122,6 +158,8 @@ def merge_data(
                 "secteur": r.get("Secteur", ""),
                 "effectifs_annee": effectifs_annee,
                 "commune": commune,
+                "segpa": segpa,
+                "ulis": ulis,
             }
         )
 
@@ -258,6 +296,8 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
             <th data-sort="commune" style="cursor:pointer;">Commune</th>
             <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
             <th data-sort="eleves" style="cursor:pointer;">Élèves</th>
+            <th>Segpa</th>
+            <th>ULIS</th>
             <th data-sort="ratio" style="cursor:pointer;">Ratio élèves / ETP</th>
           </tr>
         </thead>
@@ -381,6 +421,8 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
           <td>${{r.commune || 'n.d.'}}</td>
           <td>${{formatFloat(r.aed_etp)}} (2024)</td>
           <td>${{formatNumber(r.eleves)}} (${{r.effectifs_annee || 'n.d.'}})</td>
+          <td>${{formatNumber(r.segpa)}}</td>
+          <td>${{formatNumber(r.ulis)}}</td>
           <td>${{formatFloat(r.ratio)}}</td>
         </tr>
       `).join('');
@@ -425,12 +467,7 @@ def main():
     eff_map = load_effectifs_latest(eff_path, args.departement, args.academie)
 
     # Détection de la clé année (avec BOM possible)
-    with eff_path.open(newline="", encoding="utf-8") as f:
-        reader = csv.reader(f, delimiter=";")
-        headers = next(reader, [])
-        year_key = headers[0] if headers else "\ufeffAnnee_scolaire"
-
-    records, summary = merge_data(ind_rows, eff_map, year_key=year_key)
+    records, summary = merge_data(ind_rows, eff_map)
 
     html = render_html(
         records,
