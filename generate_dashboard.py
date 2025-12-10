@@ -189,6 +189,24 @@ def merge_data(
     eff_map: Dict[str, dict],
     ips_map: Dict[str, dict],
 ) -> Tuple[List[dict], dict]:
+    indic_year = None
+    for r in ind_rows:
+        indic_year = r.get("Année de la rentrée scolaire") or r.get("Annee_scolaire") or r.get("Rentrée scolaire")
+        if indic_year:
+            break
+
+    eff_year = None
+    for v in eff_map.values():
+        eff_year = v.get("year")
+        if eff_year:
+            break
+
+    ips_year = None
+    for v in ips_map.values():
+        ips_year = v.get("year")
+        if ips_year:
+            break
+
     records: List[dict] = []
     for r in ind_rows:
         uai = r.get("Identifiant de l'établissement")
@@ -198,6 +216,11 @@ def merge_data(
             aed = float(r["ETP de personnels de vie scolaire"]) if r["ETP de personnels de vie scolaire"] else None
         except (ValueError, KeyError):
             aed = None
+        etp_enseignants = None
+        try:
+            etp_enseignants = float(r.get("ETP enseignants (hommes et femmes)") or 0)
+        except (ValueError, TypeError):
+            etp_enseignants = None
         eleves = eff.get("eleves") if eff else None
         effectifs_annee = eff.get("year") if eff else None
         commune = eff.get("commune") if eff else None
@@ -210,6 +233,7 @@ def merge_data(
                 "uai": uai,
                 "nom": (r.get("Nom de l'établissement") or "").title(),
                 "aed_etp": aed,
+                "etp_enseignants": etp_enseignants,
                 "eleves": eleves,
                 "secteur": r.get("Secteur", ""),
                 "effectifs_annee": effectifs_annee,
@@ -222,6 +246,7 @@ def merge_data(
         )
 
     valid_aed = [x["aed_etp"] for x in records if isinstance(x["aed_etp"], (int, float))]
+    valid_etp_ens = [x["etp_enseignants"] for x in records if isinstance(x["etp_enseignants"], (int, float))]
     valid_eleves = [x["eleves"] for x in records if isinstance(x["eleves"], int)]
     valid_segpa = [x["segpa"] for x in records if isinstance(x["segpa"], int)]
     valid_ulis = [x["ulis"] for x in records if isinstance(x["ulis"], int)]
@@ -233,12 +258,17 @@ def merge_data(
         "aed_moyen": round(sum(valid_aed) / len(valid_aed), 2) if valid_aed else None,
         "aed_min": round(min(valid_aed), 2) if valid_aed else None,
         "aed_max": round(max(valid_aed), 2) if valid_aed else None,
+        "etp_ens_total": round(sum(valid_etp_ens), 2) if valid_etp_ens else None,
+        "etp_ens_moyen": round(sum(valid_etp_ens) / len(valid_etp_ens), 2) if valid_etp_ens else None,
         "eleves_total": sum(valid_eleves) if valid_eleves else None,
         "segpa_total": sum(valid_segpa) if valid_segpa else None,
         "ulis_total": sum(valid_ulis) if valid_ulis else None,
         "ips_moyen": round(sum(valid_ips) / len(valid_ips), 1) if valid_ips else None,
         "ips_min": round(min(valid_ips), 1) if valid_ips else None,
         "ips_max": round(max(valid_ips), 1) if valid_ips else None,
+        "annee_indic": indic_year,
+        "annee_eff": eff_year,
+        "annee_ips": ips_year,
     }
     return records, summary
 
@@ -249,7 +279,7 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Personnels Vie Scolaire – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
+  <title>Dashboard Personnels – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
   <style>
     :root {{
       color-scheme: light dark;
@@ -336,15 +366,14 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1>Dashboard – Personnels de vie scolaire · Collèges publics de {meta['departement_label']} ({meta['departement']})</h1>
-        <div class="muted">Académie de {meta['academie']} · Indicateurs personnels 2024 · Effectifs élèves (dernière année dispo trouvée)</div>
+        <h1>Dashboard – Personnels · Collèges publics de {meta['departement_label']} ({meta['departement']})</h1>
       </div>
-      <div class="muted">Sources : {meta['ind_path']} & {meta['eff_path']}</div>
     </div>
 
     <div id="cards-row1" class="grid"></div>
     <div id="cards-row2" class="grid"></div>
     <div id="cards-row3" class="grid"></div>
+    <div id="years" style="margin-top:-8px; margin-bottom:16px;"></div>
 
     <h2>Vue détaillée</h2>
     <div class="card" style="padding:12px; overflow:auto; max-height:650px;">
@@ -361,7 +390,8 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
             <th>ULIS</th>
             <th data-sort="ips" style="cursor:pointer;">IPS</th>
             <th data-sort="ips_ecart" style="cursor:pointer;">Écart-type IPS</th>
-            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
+            <th data-sort="etp_enseignants" style="cursor:pointer;">Enseignants (ETP)</th>
+            <th data-sort="aed_etp" style="cursor:pointer;">Vie scolaire (ETP)</th>
             <th data-sort="ratio" style="cursor:pointer;">Ratio élèves / ETP</th>
           </tr>
         </thead>
@@ -406,12 +436,13 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
       {{ label: 'Élèves (total)', value: formatNumber(summary.eleves_total) }},
       {{ label: 'Segpa total', value: formatNumber(summary.segpa_total) }},
       {{ label: 'ULIS total', value: formatNumber(summary.ulis_total) }},
+      {{ label: 'Enseignants · Total ETP', value: formatFloat(summary.etp_ens_total) }},
     ];
     const cardsRow3 = [
-      {{ label: 'Total ETP', value: formatFloat(summary.aed_total) }},
-      {{ label: 'ETP moyen', value: formatFloat(summary.aed_moyen) }},
-      {{ label: 'Min / Max ETP', value: `${{formatFloat(summary.aed_min)}} / ${{formatFloat(summary.aed_max)}}` }},
-      {{ label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' }},
+      {{ label: 'Vie scolaire · Total ETP', value: formatFloat(summary.aed_total) }},
+      {{ label: 'Vie scolaire · ETP moyen', value: formatFloat(summary.aed_moyen) }},
+      {{ label: 'Vie scolaire · Min / Max ETP', value: `${{formatFloat(summary.aed_min)}} / ${{formatFloat(summary.aed_max)}}` }},
+      {{ label: 'Vie scolaire · Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' }},
     ];
 
     const renderCards = (rootId, items) => {{
@@ -427,6 +458,13 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
     renderCards('cards-row1', cardsRow1);
     renderCards('cards-row2', cardsRow2);
     renderCards('cards-row3', cardsRow3);
+
+    const yearsRoot = document.getElementById('years');
+    yearsRoot.innerHTML = `
+      <div class="muted">
+        Années sources : personnels ${{summary.annee_indic || 'n.d.'}} · effectifs ${{summary.annee_eff || 'n.d.'}} · IPS ${{summary.annee_ips || 'n.d.'}}
+      </div>
+    `;
 
     const tbody = document.getElementById('table-body');
     const filterInput = document.getElementById('filter-text');
@@ -470,12 +508,13 @@ def render_html(records: List[dict], summary: dict, meta: dict, top_n: int) -> s
         <tr>
           <td>${{r.nom}}</td>
           <td>${{r.commune || 'n.d.'}}</td>
-          <td>${{formatNumber(r.eleves)}} (${{r.effectifs_annee || 'n.d.'}})</td>
+          <td>${{formatNumber(r.eleves)}}</td>
           <td>${{formatNumber(r.segpa)}}</td>
           <td>${{formatNumber(r.ulis)}}</td>
           <td>${{formatFloat(r.ips)}}</td>
           <td>${{formatFloat(r.ips_ecart)}}</td>
-          <td>${{formatFloat(r.aed_etp)}} (2024)</td>
+          <td>${{formatFloat(r.etp_enseignants)}}</td>
+          <td>${{formatFloat(r.aed_etp)}}</td>
           <td>${{formatFloat(r.ratio)}}</td>
         </tr>
       `).join('');

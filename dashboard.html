@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Personnels Vie Scolaire – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
+  <title>Dashboard Personnels – Collèges publics de Loire-Atlantique (académie de Nantes)</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -89,15 +89,14 @@
   <div class="container">
     <div class="top-bar">
       <div>
-        <h1>Dashboard – Personnels de vie scolaire · Collèges publics de Loire-Atlantique (44)</h1>
-        <div class="muted">Académie de NANTES · Indicateurs personnels 2024 · Effectifs élèves (dernière année dispo trouvée)</div>
+        <h1>Dashboard – Personnels · Collèges publics de Loire-Atlantique (44)</h1>
       </div>
-      <div class="muted">Sources : fr-en-indicateurs_personnels_etablissements2d.csv & Effectifs Collège FR-EN.csv</div>
     </div>
 
     <div id="cards-row1" class="grid"></div>
     <div id="cards-row2" class="grid"></div>
     <div id="cards-row3" class="grid"></div>
+    <div id="years" style="margin-top:-8px; margin-bottom:16px;"></div>
 
     <h2>Vue détaillée</h2>
     <div class="card" style="padding:12px; overflow:auto; max-height:650px;">
@@ -114,7 +113,8 @@
             <th>ULIS</th>
             <th data-sort="ips" style="cursor:pointer;">IPS</th>
             <th data-sort="ips_ecart" style="cursor:pointer;">Écart-type IPS</th>
-            <th data-sort="aed_etp" style="cursor:pointer;">ETP</th>
+            <th data-sort="etp_enseignants" style="cursor:pointer;">Enseignants (ETP)</th>
+            <th data-sort="aed_etp" style="cursor:pointer;">Vie scolaire (ETP)</th>
             <th data-sort="ratio" style="cursor:pointer;">Ratio élèves / ETP</th>
           </tr>
         </thead>
@@ -141,6 +141,7 @@
       "uai": "0440147W",
       "nom": "College Rene Guy Cadou",
       "aed_etp": 8.92,
+      "etp_enseignants": 50.18,
       "eleves": 787,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -154,6 +155,7 @@
       "uai": "0440311Z",
       "nom": "College Ernest Renan",
       "aed_etp": 8.2,
+      "etp_enseignants": 45.22,
       "eleves": 560,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -167,6 +169,7 @@
       "uai": "0442052S",
       "nom": "College Pierre Abelard",
       "aed_etp": 6.93,
+      "etp_enseignants": 40.28,
       "eleves": 649,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -180,6 +183,7 @@
       "uai": "0440289A",
       "nom": "College Jean Mounes",
       "aed_etp": 7.9,
+      "etp_enseignants": 36.62,
       "eleves": 592,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -193,6 +197,7 @@
       "uai": "0442835T",
       "nom": "College Simone Veil",
       "aed_etp": 5.9,
+      "etp_enseignants": 34.02,
       "eleves": 534,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -206,6 +211,7 @@
       "uai": "0442011X",
       "nom": "College La Coutanciere",
       "aed_etp": 5.4,
+      "etp_enseignants": 32.84,
       "eleves": 564,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -219,6 +225,7 @@
       "uai": "0440350S",
       "nom": "College Albert Vincon",
       "aed_etp": 5.9,
+      "etp_enseignants": 31.13,
       "eleves": 503,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -232,6 +239,7 @@
       "uai": "0440049P",
       "nom": "College Aristide Briand",
       "aed_etp": 5.0,
+      "etp_enseignants": 32.47,
       "eleves": 473,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -245,6 +253,7 @@
       "uai": "0440028S",
       "nom": "College La Coliniere",
       "aed_etp": 5.3,
+      "etp_enseignants": 32.37,
       "eleves": 521,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -258,6 +267,7 @@
       "uai": "0440015C",
       "nom": "College Jacques Prevert",
       "aed_etp": 4.6,
+      "etp_enseignants": 26.33,
       "eleves": 431,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -271,6 +281,7 @@
       "uai": "0442921L",
       "nom": "College Camille Lepage",
       "aed_etp": 4.9,
+      "etp_enseignants": 27.5,
       "eleves": 421,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -284,6 +295,7 @@
       "uai": "0442368K",
       "nom": "College Du Pays Blanc",
       "aed_etp": 4.2,
+      "etp_enseignants": 24.22,
       "eleves": 353,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -297,6 +309,7 @@
       "uai": "0440010X",
       "nom": "College Paul Langevin",
       "aed_etp": 7.55,
+      "etp_enseignants": 51.48,
       "eleves": 894,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -310,6 +323,7 @@
       "uai": "0442029S",
       "nom": "College Gerard Philipe",
       "aed_etp": 8.4,
+      "etp_enseignants": 47.29,
       "eleves": 837,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -323,6 +337,7 @@
       "uai": "0440314C",
       "nom": "College Jean Moulin",
       "aed_etp": 8.7,
+      "etp_enseignants": 45.02,
       "eleves": 700,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -336,6 +351,7 @@
       "uai": "0441545R",
       "nom": "College La Noe Lambert",
       "aed_etp": 6.8,
+      "etp_enseignants": 46.19,
       "eleves": 657,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -349,6 +365,7 @@
       "uai": "0443020U",
       "nom": "College De Nantes Centre",
       "aed_etp": 8.0,
+      "etp_enseignants": 41.73,
       "eleves": 676,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -362,6 +379,7 @@
       "uai": "0441654J",
       "nom": "College Isabelle Autissier",
       "aed_etp": 7.0,
+      "etp_enseignants": 43.46,
       "eleves": 694,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -375,6 +393,7 @@
       "uai": "0442759K",
       "nom": "College Anita Conti",
       "aed_etp": 6.5,
+      "etp_enseignants": 40.7,
       "eleves": 664,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -388,6 +407,7 @@
       "uai": "0442625P",
       "nom": "College Olympe De Gouges Ste Pazanne",
       "aed_etp": 7.8,
+      "etp_enseignants": 38.56,
       "eleves": 616,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -401,6 +421,7 @@
       "uai": "0442728B",
       "nom": "College Marcelle Baron",
       "aed_etp": 6.2,
+      "etp_enseignants": 40.19,
       "eleves": 634,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -414,6 +435,7 @@
       "uai": "0440016D",
       "nom": "College Anne De Bretagne",
       "aed_etp": 6.4,
+      "etp_enseignants": 39.61,
       "eleves": 699,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -427,6 +449,7 @@
       "uai": "0441547T",
       "nom": "College Le Grand Beauregard",
       "aed_etp": 5.1,
+      "etp_enseignants": 37.77,
       "eleves": 569,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -440,6 +463,7 @@
       "uai": "0440292D",
       "nom": "College Jean Mermoz",
       "aed_etp": 5.0,
+      "etp_enseignants": 35.16,
       "eleves": 539,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -453,6 +477,7 @@
       "uai": "0442806L",
       "nom": "College Mona Ozouf",
       "aed_etp": 6.3,
+      "etp_enseignants": 33.85,
       "eleves": 554,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -466,6 +491,7 @@
       "uai": "0440080Y",
       "nom": "College Jean Monnet",
       "aed_etp": 5.2,
+      "etp_enseignants": 33.07,
       "eleves": 543,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -479,6 +505,7 @@
       "uai": "0440025N",
       "nom": "College Hector Berlioz",
       "aed_etp": 4.9,
+      "etp_enseignants": 31.14,
       "eleves": 462,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -492,6 +519,7 @@
       "uai": "0440285W",
       "nom": "College Gaston Serpette",
       "aed_etp": 5.1,
+      "etp_enseignants": 31.91,
       "eleves": 503,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -505,6 +533,7 @@
       "uai": "0441822S",
       "nom": "College Grand Air",
       "aed_etp": 5.0,
+      "etp_enseignants": 30.42,
       "eleves": 498,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -518,6 +547,7 @@
       "uai": "0440286X",
       "nom": "College Claude Debussy",
       "aed_etp": 6.5,
+      "etp_enseignants": 25.23,
       "eleves": 305,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -531,6 +561,7 @@
       "uai": "0441862K",
       "nom": "College Louise Michel",
       "aed_etp": 5.1,
+      "etp_enseignants": 26.67,
       "eleves": 357,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -544,6 +575,7 @@
       "uai": "0440539X",
       "nom": "College Rene Guy Cadou",
       "aed_etp": 5.11,
+      "etp_enseignants": 24.62,
       "eleves": 368,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -557,6 +589,7 @@
       "uai": "0442807M",
       "nom": "College Frida Kahlo",
       "aed_etp": 10.3,
+      "etp_enseignants": 54.49,
       "eleves": 776,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -570,6 +603,7 @@
       "uai": "0440284V",
       "nom": "College Stendhal",
       "aed_etp": 10.2,
+      "etp_enseignants": 43.29,
       "eleves": 531,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -583,6 +617,7 @@
       "uai": "0440348P",
       "nom": "College La Ville Aux Roses",
       "aed_etp": 8.3,
+      "etp_enseignants": 44.23,
       "eleves": 654,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -596,6 +631,7 @@
       "uai": "0441616T",
       "nom": "College Julien Lambot",
       "aed_etp": 8.48,
+      "etp_enseignants": 42.13,
       "eleves": 534,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -609,6 +645,7 @@
       "uai": "0440055W",
       "nom": "College Jean Rostand",
       "aed_etp": 7.1,
+      "etp_enseignants": 41.78,
       "eleves": 704,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -622,6 +659,7 @@
       "uai": "0442023K",
       "nom": "College Paul Gauguin",
       "aed_etp": 6.1,
+      "etp_enseignants": 40.78,
       "eleves": 648,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -635,6 +673,7 @@
       "uai": "0441610L",
       "nom": "College Gutenberg",
       "aed_etp": 5.6,
+      "etp_enseignants": 38.32,
       "eleves": 569,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -648,6 +687,7 @@
       "uai": "0442417N",
       "nom": "College Les Sables D Or",
       "aed_etp": 3.8,
+      "etp_enseignants": 36.07,
       "eleves": 604,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -661,6 +701,7 @@
       "uai": "0440293E",
       "nom": "College Robert Schuman",
       "aed_etp": 6.0,
+      "etp_enseignants": 32.02,
       "eleves": 507,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -674,6 +715,7 @@
       "uai": "0442781J",
       "nom": "College Rosa Parks",
       "aed_etp": 5.9,
+      "etp_enseignants": 32.78,
       "eleves": 506,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -687,6 +729,7 @@
       "uai": "0441658N",
       "nom": "College Pierre Et Marie Curie",
       "aed_etp": 5.2,
+      "etp_enseignants": 32.99,
       "eleves": 524,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -700,6 +743,7 @@
       "uai": "0440018F",
       "nom": "College Raymond Queneau",
       "aed_etp": 5.76,
+      "etp_enseignants": 28.23,
       "eleves": 330,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -713,6 +757,7 @@
       "uai": "0440347N",
       "nom": "College Saint Exupery",
       "aed_etp": 5.0,
+      "etp_enseignants": 28.55,
       "eleves": 461,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -726,6 +771,7 @@
       "uai": "0440013A",
       "nom": "College Bellevue",
       "aed_etp": 5.4,
+      "etp_enseignants": 28.44,
       "eleves": 400,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -739,6 +785,7 @@
       "uai": "0440291C",
       "nom": "College Iles De Loire",
       "aed_etp": 4.7,
+      "etp_enseignants": 27.67,
       "eleves": 428,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -752,6 +799,7 @@
       "uai": "0441917V",
       "nom": "College La Fontaine",
       "aed_etp": 5.1,
+      "etp_enseignants": 22.25,
       "eleves": 364,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -765,6 +813,7 @@
       "uai": "0441655K",
       "nom": "College Louis Pasteur",
       "aed_etp": 5.4,
+      "etp_enseignants": 21.91,
       "eleves": 277,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -778,6 +827,7 @@
       "uai": "0441612N",
       "nom": "College Pierre De Coubertin",
       "aed_etp": 3.8,
+      "etp_enseignants": 16.9,
       "eleves": 215,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -791,6 +841,7 @@
       "uai": "0441548U",
       "nom": "College Rene Bernier",
       "aed_etp": 9.0,
+      "etp_enseignants": 51.94,
       "eleves": 849,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -804,6 +855,7 @@
       "uai": "0441724K",
       "nom": "College La Reinetiere",
       "aed_etp": 6.73,
+      "etp_enseignants": 44.8,
       "eleves": 664,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -817,6 +869,7 @@
       "uai": "0440065G",
       "nom": "College Petite Lande",
       "aed_etp": 7.0,
+      "etp_enseignants": 43.53,
       "eleves": 745,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -830,6 +883,7 @@
       "uai": "0441657M",
       "nom": "College Antoine De Saint Exupery",
       "aed_etp": 6.0,
+      "etp_enseignants": 37.24,
       "eleves": 578,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -843,6 +897,7 @@
       "uai": "0441686U",
       "nom": "College Auguste Mailloux",
       "aed_etp": 6.0,
+      "etp_enseignants": 36.55,
       "eleves": 562,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -856,6 +911,7 @@
       "uai": "0442542Z",
       "nom": "College Andree Chedid",
       "aed_etp": 6.3,
+      "etp_enseignants": 36.57,
       "eleves": 595,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -869,6 +925,7 @@
       "uai": "0440066H",
       "nom": "College Helene Et Rene Guy Cadou",
       "aed_etp": 7.17,
+      "etp_enseignants": 34.0,
       "eleves": 535,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -882,6 +939,7 @@
       "uai": "0442277L",
       "nom": "College De Goulaine",
       "aed_etp": 6.0,
+      "etp_enseignants": 34.1,
       "eleves": 533,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -895,6 +953,7 @@
       "uai": "0441859G",
       "nom": "College Eric Tabarly",
       "aed_etp": 5.0,
+      "etp_enseignants": 31.74,
       "eleves": 451,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -908,6 +967,7 @@
       "uai": "0442595G",
       "nom": "College Lucie Aubrac",
       "aed_etp": 5.3,
+      "etp_enseignants": 32.56,
       "eleves": 511,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -921,6 +981,7 @@
       "uai": "0441728P",
       "nom": "College Rene Char",
       "aed_etp": 5.0,
+      "etp_enseignants": 18.74,
       "eleves": 278,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -934,6 +995,7 @@
       "uai": "0440061C",
       "nom": "College Jules Verne",
       "aed_etp": 3.5,
+      "etp_enseignants": 15.24,
       "eleves": 210,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -947,6 +1009,7 @@
       "uai": "0440023L",
       "nom": "College Chantenay",
       "aed_etp": 8.7,
+      "etp_enseignants": 49.91,
       "eleves": 816,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -960,6 +1023,7 @@
       "uai": "0440316E",
       "nom": "College Marie Marvingt",
       "aed_etp": 7.1,
+      "etp_enseignants": 45.93,
       "eleves": 685,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -973,6 +1037,7 @@
       "uai": "0440045K",
       "nom": "College Victor Hugo",
       "aed_etp": 8.5,
+      "etp_enseignants": 43.41,
       "eleves": 707,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -986,6 +1051,7 @@
       "uai": "0441613P",
       "nom": "College Pierre Norange",
       "aed_etp": 6.8,
+      "etp_enseignants": 41.1,
       "eleves": 447,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -999,6 +1065,7 @@
       "uai": "0440308W",
       "nom": "College Alice Milliat",
       "aed_etp": 6.55,
+      "etp_enseignants": 43.68,
       "eleves": 605,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1012,6 +1079,7 @@
       "uai": "0442691L",
       "nom": "College Agnes Varda",
       "aed_etp": 8.0,
+      "etp_enseignants": 41.5,
       "eleves": 712,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1025,6 +1093,7 @@
       "uai": "0441858F",
       "nom": "College Bellestre",
       "aed_etp": 8.75,
+      "etp_enseignants": 40.28,
       "eleves": 677,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1038,6 +1107,7 @@
       "uai": "0442418P",
       "nom": "College Le Haut Gesvres",
       "aed_etp": 6.2,
+      "etp_enseignants": 42.55,
       "eleves": 724,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1051,6 +1121,7 @@
       "uai": "0440008V",
       "nom": "College Cacault",
       "aed_etp": 6.9,
+      "etp_enseignants": 37.38,
       "eleves": 552,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1064,6 +1135,7 @@
       "uai": "0440534S",
       "nom": "College Salvador Allende",
       "aed_etp": 6.0,
+      "etp_enseignants": 36.17,
       "eleves": 544,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1077,6 +1149,7 @@
       "uai": "0440538W",
       "nom": "College Jacques Brel",
       "aed_etp": 5.8,
+      "etp_enseignants": 36.61,
       "eleves": 592,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1090,6 +1163,7 @@
       "uai": "0440536U",
       "nom": "College Sophie Germain",
       "aed_etp": 7.3,
+      "etp_enseignants": 34.51,
       "eleves": 449,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1103,6 +1177,7 @@
       "uai": "0441608J",
       "nom": "College La Durantiere",
       "aed_etp": 6.0,
+      "etp_enseignants": 29.88,
       "eleves": 348,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1116,6 +1191,7 @@
       "uai": "0440283U",
       "nom": "College Libertaire Rutigliano",
       "aed_etp": 5.6,
+      "etp_enseignants": 31.75,
       "eleves": 448,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1129,6 +1205,7 @@
       "uai": "0440064F",
       "nom": "College Pont Rousseau",
       "aed_etp": 5.9,
+      "etp_enseignants": 32.45,
       "eleves": 519,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1142,6 +1219,7 @@
       "uai": "0442782K",
       "nom": "College Julie Victoire Daubie",
       "aed_etp": 5.43,
+      "etp_enseignants": 27.88,
       "eleves": 444,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1155,6 +1233,7 @@
       "uai": "0440287Y",
       "nom": "College Le Herault",
       "aed_etp": 5.6,
+      "etp_enseignants": 27.63,
       "eleves": 449,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1168,6 +1247,7 @@
       "uai": "0442186M",
       "nom": "College Condorcet",
       "aed_etp": 4.2,
+      "etp_enseignants": 27.72,
       "eleves": 394,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1181,6 +1261,7 @@
       "uai": "0441727N",
       "nom": "College Arthur Rimbaud",
       "aed_etp": 5.6,
+      "etp_enseignants": 26.72,
       "eleves": 360,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1194,6 +1275,7 @@
       "uai": "0443021V",
       "nom": "College De Chaumes En Retz",
       "aed_etp": 3.8,
+      "etp_enseignants": 17.46,
       "eleves": 279,
       "secteur": "Public",
       "effectifs_annee": "2024",
@@ -1210,12 +1292,17 @@
     "aed_moyen": 6.26,
     "aed_min": 3.5,
     "aed_max": 10.3,
+    "etp_ens_total": 2901.61,
+    "etp_ens_moyen": 35.39,
     "eleves_total": 44451,
     "segpa_total": 1320,
     "ulis_total": 722,
     "ips_moyen": 107.4,
     "ips_min": 69.8,
-    "ips_max": 132.3
+    "ips_max": 132.3,
+    "annee_indic": "2024",
+    "annee_eff": "2024",
+    "annee_ips": "2024-2025"
   }
 }
   </script>
@@ -1241,12 +1328,13 @@
       { label: 'Élèves (total)', value: formatNumber(summary.eleves_total) },
       { label: 'Segpa total', value: formatNumber(summary.segpa_total) },
       { label: 'ULIS total', value: formatNumber(summary.ulis_total) },
+      { label: 'Enseignants · Total ETP', value: formatFloat(summary.etp_ens_total) },
     ];
     const cardsRow3 = [
-      { label: 'Total ETP', value: formatFloat(summary.aed_total) },
-      { label: 'ETP moyen', value: formatFloat(summary.aed_moyen) },
-      { label: 'Min / Max ETP', value: `${formatFloat(summary.aed_min)} / ${formatFloat(summary.aed_max)}` },
-      { label: 'Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' },
+      { label: 'Vie scolaire · Total ETP', value: formatFloat(summary.aed_total) },
+      { label: 'Vie scolaire · ETP moyen', value: formatFloat(summary.aed_moyen) },
+      { label: 'Vie scolaire · Min / Max ETP', value: `${formatFloat(summary.aed_min)} / ${formatFloat(summary.aed_max)}` },
+      { label: 'Vie scolaire · Élèves par ETP', value: ratioElevesParAed ? formatFloat(ratioElevesParAed) : 'n.d.' },
     ];
 
     const renderCards = (rootId, items) => {
@@ -1262,6 +1350,13 @@
     renderCards('cards-row1', cardsRow1);
     renderCards('cards-row2', cardsRow2);
     renderCards('cards-row3', cardsRow3);
+
+    const yearsRoot = document.getElementById('years');
+    yearsRoot.innerHTML = `
+      <div class="muted">
+        Années sources : personnels ${summary.annee_indic || 'n.d.'} · effectifs ${summary.annee_eff || 'n.d.'} · IPS ${summary.annee_ips || 'n.d.'}
+      </div>
+    `;
 
     const tbody = document.getElementById('table-body');
     const filterInput = document.getElementById('filter-text');
@@ -1305,12 +1400,13 @@
         <tr>
           <td>${r.nom}</td>
           <td>${r.commune || 'n.d.'}</td>
-          <td>${formatNumber(r.eleves)} (${r.effectifs_annee || 'n.d.'})</td>
+          <td>${formatNumber(r.eleves)}</td>
           <td>${formatNumber(r.segpa)}</td>
           <td>${formatNumber(r.ulis)}</td>
           <td>${formatFloat(r.ips)}</td>
           <td>${formatFloat(r.ips_ecart)}</td>
-          <td>${formatFloat(r.aed_etp)} (2024)</td>
+          <td>${formatFloat(r.etp_enseignants)}</td>
+          <td>${formatFloat(r.aed_etp)}</td>
           <td>${formatFloat(r.ratio)}</td>
         </tr>
       `).join('');
